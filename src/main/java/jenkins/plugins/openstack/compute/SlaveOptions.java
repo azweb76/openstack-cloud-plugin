@@ -43,7 +43,7 @@ import javax.annotation.Nonnull;
  * @author ogondza.
  */
 public class SlaveOptions implements Describable<SlaveOptions> {
-    private static final SlaveOptions EMPTY = new SlaveOptions(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    private static final SlaveOptions EMPTY = new SlaveOptions(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
     // Provisioning attributes
     private final @CheckForNull String imageId;
@@ -56,6 +56,7 @@ public class SlaveOptions implements Describable<SlaveOptions> {
     private final @CheckForNull String availabilityZone;
     private final @CheckForNull Integer startTimeout;
     private final @CheckForNull String keyPairName;
+    private final @CheckForNull String metadata;
 
     // Slave launch attributes
     private final @CheckForNull Integer numExecutors;
@@ -127,6 +128,10 @@ public class SlaveOptions implements Describable<SlaveOptions> {
         return slaveType;
     }
 
+    public @CheckForNull String getMetadata() {
+        return metadata;
+    }
+
     public @CheckForNull Integer getRetentionTime() {
         return retentionTime;
     }
@@ -148,7 +153,8 @@ public class SlaveOptions implements Describable<SlaveOptions> {
                 b.fsRoot,
                 b.credentialsId,
                 b.slaveType,
-                b.retentionTime
+                b.retentionTime,
+                b.metadata
         );
     }
 
@@ -169,7 +175,8 @@ public class SlaveOptions implements Describable<SlaveOptions> {
             String fsRoot,
             String credentialsId,
             JCloudsCloud.SlaveType slaveType,
-            Integer retentionTime
+            Integer retentionTime,
+            String metadata
     ) {
         this.imageId = Util.fixEmpty(imageId);
         this.hardwareId = Util.fixEmpty(hardwareId);
@@ -187,6 +194,7 @@ public class SlaveOptions implements Describable<SlaveOptions> {
         this.credentialsId = Util.fixEmpty(credentialsId);
         this.slaveType = slaveType;
         this.retentionTime = retentionTime;
+        this.metadata = Util.fixEmpty(metadata);
     }
 
     /**
@@ -210,6 +218,7 @@ public class SlaveOptions implements Describable<SlaveOptions> {
                 .credentialsId(_override(this.credentialsId, o.credentialsId))
                 .slaveType(_override(this.slaveType, o.slaveType))
                 .retentionTime(_override(this.retentionTime, o.retentionTime))
+                .metadata(_override(this.metadata, o.metadata))
                 .build()
         ;
     }
@@ -239,6 +248,7 @@ public class SlaveOptions implements Describable<SlaveOptions> {
                 .credentialsId(_erase(this.credentialsId, defaults.credentialsId))
                 .slaveType(_erase(this.slaveType, defaults.slaveType))
                 .retentionTime(_erase(this.retentionTime, defaults.retentionTime))
+                .metadata(_erase(this.metadata, defaults.metadata))
                 .build()
         ;
     }
@@ -268,6 +278,7 @@ public class SlaveOptions implements Describable<SlaveOptions> {
                 .append("credentialsId", credentialsId)
                 .append("slaveType", slaveType)
                 .append("retentionTime", retentionTime)
+                .append("metadata", metadata)
                 .toString()
         ;
     }
@@ -294,6 +305,7 @@ public class SlaveOptions implements Describable<SlaveOptions> {
         if (fsRoot != null ? !fsRoot.equals(that.fsRoot) : that.fsRoot != null) return false;
         if (credentialsId != null ? !credentialsId.equals(that.credentialsId) : that.credentialsId != null) return false;
         if (slaveType != that.slaveType) return false;
+        if (metadata != that.metadata) return false;
         return retentionTime != null ? retentionTime.equals(that.retentionTime) : that.retentionTime == null;
 
     }
@@ -315,6 +327,7 @@ public class SlaveOptions implements Describable<SlaveOptions> {
         result = 31 * result + (fsRoot != null ? fsRoot.hashCode() : 0);
         result = 31 * result + (credentialsId != null ? credentialsId.hashCode() : 0);
         result = 31 * result + (slaveType != null ? slaveType.hashCode() : 0);
+        result = 31 * result + (metadata != null ? metadata.hashCode() : 0);
         result = 31 * result + (retentionTime != null ? retentionTime.hashCode() : 0);
         return result;
     }
@@ -339,6 +352,7 @@ public class SlaveOptions implements Describable<SlaveOptions> {
                 .fsRoot(fsRoot)
                 .credentialsId(credentialsId)
                 .slaveType(slaveType)
+                .metadata(metadata)
                 .retentionTime(retentionTime)
         ;
     }
@@ -367,6 +381,7 @@ public class SlaveOptions implements Describable<SlaveOptions> {
         private @CheckForNull String jvmOptions;
         private @CheckForNull String fsRoot;
         private @CheckForNull String credentialsId;
+        private @CheckForNull String metadata;
 
         private @CheckForNull JCloudsCloud.SlaveType slaveType;
         private @CheckForNull Integer retentionTime;
@@ -444,6 +459,11 @@ public class SlaveOptions implements Describable<SlaveOptions> {
 
         public @Nonnull Builder credentialsId(String credentialsId) {
             this.credentialsId = credentialsId;
+            return this;
+        }
+
+        public @Nonnull Builder metadata(String metadata) {
+            this.metadata = metadata;
             return this;
         }
 

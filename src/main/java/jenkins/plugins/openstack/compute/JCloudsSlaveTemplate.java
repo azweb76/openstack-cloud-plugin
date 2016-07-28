@@ -231,8 +231,10 @@ public class JCloudsSlaveTemplate implements Describable<JCloudsSlaveTemplate>, 
 
         String az = opts.getAvailabilityZone();
         if (!Strings.isNullOrEmpty(az)) {
-            LOGGER.fine("Setting availabilityZone to " + az);
-            builder.availabilityZone(az);
+            String x = az.split(",");
+            int az_idx = (int)(Math.random() * x.length + 1);
+            LOGGER.fine("Setting availabilityZone to " + x[az_idx]);
+            builder.availabilityZone(x[az_idx]);
         }
 
         @CheckForNull String userDataText = getUserData();
@@ -246,6 +248,15 @@ public class JCloudsSlaveTemplate implements Describable<JCloudsSlaveTemplate>, 
             String content = Util.replaceMacro(userDataText, vars);
             LOGGER.fine("Sending user-data:\n" + content);
             builder.userData(Base64.encode(content.getBytes()));
+        }
+
+        String metadata = opts.getMetadata();
+        if (metadata != null){
+          String[] p = metadata.split(",");
+          for(Integer i = 0; i < p.length; i++){
+            String[] nv = p[i].split("=");
+            builder.addMetadataItem(nv[0], nv[1]);
+          }
         }
 
         final Openstack openstack = cloud.getOpenstack();
